@@ -12,13 +12,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function generatePortalLink() {
     const session  = await getServerSession(authOptions);
-    const host = headers().get("host");
+    const host = headers().get("host")
+
+    console.log(host, "Host");
 
     if(!session?.user?.id) return console.error("No User Id Found!");
 
     const { user: {id},} = session;
+    console.log(id, "id")
     const returnUrl = process.env.NODE_ENV === "development" ? `http://${host}/register` : `https://${host}/register`;
     const doc = await adminDb.collection("customers").doc(id).get();
+    console.log(doc, "document")
     if(!doc.data) {
         return console.error("No Customer record found with userId: ", id);
     }
